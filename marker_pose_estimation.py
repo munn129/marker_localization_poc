@@ -5,7 +5,7 @@ import numpy as np
 #camera_matrix = np.array([1,0,2016,0,1,1512,0,0,1], dtype=np.float32).reshape(3,3)
 #distort_coefficient = np.array([0,0,0,0], dtype=np.float32)
 
-# iphone camera intrinsic parameter
+# iphone camera intrinsic parameter --> it is wrong! 
 camera_matrix = np.array([[1.97547873e+03, 0.00000000e+00, 1.06077279e+03],
                           [0.00000000e+00, 2.05341424e+03, 5.13500761e+02],
                           [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]], dtype=np.float32)
