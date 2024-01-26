@@ -34,9 +34,16 @@ corners, ids, rejected = detector.detectMarkers(img)
 if len(ids) > 0:
     cv2.aruco.drawDetectedMarkers(output_img, corners, ids)
 
+    rotation_vector = []
+    translation_vector = []
+
     for i in range(0, len(ids)):
-        return_val, rotation_vector, translation_vector = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
-        output_img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rotation_vector, translation_vector, 0.03)
+        _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
+        rotation_vector.append(rvec)
+        translation_vector.append(tvec)
+
+    for i in range(0, len(ids)):
+        output_img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rotation_vector[i], translation_vector[i], 0.03)
     
 if not cv2.imwrite("iphone.png", output_img):
     raise Exception("save is failed")
