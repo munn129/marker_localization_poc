@@ -1,4 +1,4 @@
-# simple ArUco marker localization(in progress)
+camera pose estimation with aruco(in progress)
 
 camera pose estimation with aruco 
 
