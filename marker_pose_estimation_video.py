@@ -21,7 +21,8 @@ detector_parameter = cv2.aruco.DetectorParameters()
 marker_dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_1000)
 detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
 
-cap = cv2.VideoCapture(video)
+#cap = cv2.VideoCapture(video)
+cap = cv2.VideoCapture(0)
 if cap.isOpened():
     while True:
         ret, img = cap.read()
@@ -38,8 +39,8 @@ if cap.isOpened():
                     translation_vector.append(tvec)
                     output_img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rotation_vector[i], translation_vector[i], 0.03)
 
-                cv2.imshow(video, output_img)
-                cv2.waitKey(33)
+            cv2.imshow(video, output_img)
+            cv2.waitKey(33)
         else:
             break
 else:
