@@ -25,6 +25,7 @@ detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
 cap = cv2.VideoCapture(video)
 #cap = cv2.VideoCapture(0)
 if cap.isOpened():
+
     while True:
         ret, img = cap.read()
         if ret:
@@ -37,6 +38,8 @@ if cap.isOpened():
             for i in range(0, len(ids)):
                 _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, 0.03)
+                if ids[i,0] < 11:
+                    print(marker_coordinate[ids[i,0]][0])
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
