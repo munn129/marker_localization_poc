@@ -1,6 +1,4 @@
-camera pose estimation with aruco(in progress)
-
-camera pose estimation with aruco 
+### camera pose estimation with aruco(in progress)
 
 ### dependencies
 opencv 4.5.3 ~  
