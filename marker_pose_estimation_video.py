@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from marker_coordinate import marker_coordinate
 
 camera_matrix = np.array([1,0,640,0,1,360,0,0,1], dtype=np.float32).reshape(3,3)
 distort_coefficient = np.array([0,0,0,0], dtype=np.float32)
@@ -21,8 +22,8 @@ detector_parameter = cv2.aruco.DetectorParameters()
 marker_dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_1000)
 detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
 
-#cap = cv2.VideoCapture(video)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(video)
+#cap = cv2.VideoCapture(0)
 if cap.isOpened():
     while True:
         ret, img = cap.read()
