@@ -6,12 +6,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 from marker_coordinate import marker_coordinate
 
-camera_matrix = np.array([1,0,640,0,1,360,0,0,1], dtype=np.float32).reshape(3,3)
-distort_coefficient = np.array([0,0,0,0], dtype=np.float32)
+camera_matrix = np.array([26273.684,0,540,0,26273.684,960,0,0,1], dtype=np.float32).reshape(3,3)
+distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
 
 marker_length = 0.03
 
-video = './test_video.mp4'
+video = './calibrated_video.mp4'
 
 # set coordinate system
 object_points = np.zeros((4, 3), dtype=np.float32)
@@ -25,6 +25,15 @@ object_points[3] = np.array([-marker_length/2.0, -marker_length/2.0, 0], dtype=n
 detector_parameter = cv2.aruco.DetectorParameters()
 marker_dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_1000)
 detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
+
+# initialize graph
+plt.ion()
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+x_data = []
+y_data = []
+z_data = []
 
 cap = cv2.VideoCapture(video)
 #cap = cv2.VideoCapture(0)
@@ -64,6 +73,15 @@ if cap.isOpened():
                 camera_pose_post[-1] = 1
                 # print(camera_pose_post)
 
+                x_data.append(camera_pose_post[0])
+                y_data.append(camera_pose_post[1])
+                z_data.append(camera_pose_post[2])
+                ax.clear()
+                ax.scatter(x_data, y_data, z_data, marker='o')
+
+                plt.show()
+                plt.pause(0.1)
+
         cv2.imshow(video, img)
         cv2.waitKey(33)
 
@@ -72,5 +90,3 @@ else:
 
 cap.release()
 cv2.destroyAllWindows()
-
-plt.show()
