@@ -67,9 +67,13 @@ if cap.isOpened():
                     marker_absolute_position = np.array([marker_x, marker_y, marker_z, 1])
                     camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
 
+                    # for average camera pose
                     camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose)]
+                    
             if(camera_pose_post[-1] != 0):
-                camera_pose_post = [i/camera_pose_post[-1] for i in camera_pose_post]
+                # average camera pose estimated from each marker
+                # absolute camera pose |value|
+                camera_pose_post = [i/camera_pose_post[-1] if i > 0 else i/camera_pose_post[-1] * -1 for i in camera_pose_post]
                 camera_pose_post[-1] = 1
                 # print(camera_pose_post)
 
@@ -78,9 +82,10 @@ if cap.isOpened():
                 z_data.append(camera_pose_post[2])
                 ax.clear()
                 ax.scatter(x_data, y_data, z_data, marker='o')
+                # ax.plot(x_data, y_data, z_data)
 
                 plt.show()
-                plt.pause(0.1)
+                plt.pause(0.01)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
