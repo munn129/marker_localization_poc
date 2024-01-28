@@ -1,3 +1,6 @@
+# camera pose estimation with aruco marker
+# todo: ROS and Docker integration
+
 import cv2
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -25,15 +28,6 @@ object_points[3] = np.array([-marker_length/2.0, -marker_length/2.0, 0], dtype=n
 detector_parameter = cv2.aruco.DetectorParameters()
 marker_dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_1000)
 detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
-
-# initialize graph
-plt.ion()
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-x_data = []
-y_data = []
-z_data = []
 
 cap = cv2.VideoCapture(video)
 #cap = cv2.VideoCapture(0)
@@ -66,26 +60,6 @@ if cap.isOpened():
 
                     marker_absolute_position = np.array([marker_x, marker_y, marker_z, 1])
                     camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
-
-                    # for average camera pose
-                    camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose)]
-                    
-            if(camera_pose_post[-1] != 0):
-                # average camera pose estimated from each marker
-                # absolute camera pose |value|
-                camera_pose_post = [i/camera_pose_post[-1] if i > 0 else i/camera_pose_post[-1] * -1 for i in camera_pose_post]
-                camera_pose_post[-1] = 1
-                # print(camera_pose_post)
-
-                x_data.append(camera_pose_post[0])
-                y_data.append(camera_pose_post[1])
-                z_data.append(camera_pose_post[2])
-                ax.clear()
-                ax.scatter(x_data, y_data, z_data, marker='o')
-                # ax.plot(x_data, y_data, z_data)
-
-                plt.show()
-                plt.pause(0.01)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
