@@ -26,13 +26,6 @@ detector_parameter = cv2.aruco.DetectorParameters()
 marker_dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_1000)
 detector = cv2.aruco.ArucoDetector(marker_dictionary, detector_parameter)
 
-# draw graph
-fig = plt.figure()
-axes = fig.add_subplot(111, projection='3d')
-scatter = axes.scatter([], [], [], c='r', marker='o')
-
-graph_arr = []
-
 cap = cv2.VideoCapture(video)
 #cap = cv2.VideoCapture(0)
 if cap.isOpened():
@@ -70,7 +63,6 @@ if cap.isOpened():
                 camera_pose_post = [i/camera_pose_post[-1] for i in camera_pose_post]
                 camera_pose_post[-1] = 1
                 # print(camera_pose_post)
-                graph_arr.append(camera_pose_post)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
@@ -80,13 +72,5 @@ else:
 
 cap.release()
 cv2.destroyAllWindows()
-
-def update_graph(f):
-    x, y, z, _ = f
-    scatter._offsets3d = (x, y, z)
-    plt.draw()
-
-for f in graph_arr:
-    update_graph(f)
 
 plt.show()
