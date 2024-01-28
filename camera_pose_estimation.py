@@ -11,7 +11,7 @@ distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
 
 marker_length = 0.03
 
-video = './calibrated_video.mp4'
+video = './test_video.mp4'
 
 # set coordinate system
 object_points = np.zeros((4, 3), dtype=np.float32)

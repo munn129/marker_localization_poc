@@ -11,7 +11,7 @@ distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
 
 marker_length = 0.03
 
-video = './calibrated_video.mp4'
+video = './test_video.mp4'
 
 # set coordinate system
 object_points = np.zeros((4, 3), dtype=np.float32)
@@ -53,7 +53,7 @@ if cap.isOpened():
                 _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, 0.03)
 
-                if ids[i,0] == 1:
+                if ids[i,0] == 10:
                     rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=False).as_matrix()
                     pose_matrix = np.eye(4)
                     pose_matrix[:3, :3] = rotation_matrix
@@ -73,14 +73,14 @@ if cap.isOpened():
                 camera_pose_post[-1] = 1
                 # print(camera_pose_post)
 
-                x_data.append(camera_pose_post[0])
-                y_data.append(camera_pose_post[1])
-                z_data.append(camera_pose_post[2])
+                x_data.append(camera_pose_post[0] if camera_pose_post[0] > 0 else camera_pose_post[0] * -1)
+                y_data.append(camera_pose_post[1] if camera_pose_post[1] > 0 else camera_pose_post[1] * -1)
+                z_data.append(camera_pose_post[2] if camera_pose_post[2] > 0 else camera_pose_post[2] * -1)
                 ax.clear()
                 ax.scatter(x_data, y_data, z_data, marker='o')
 
                 plt.show()
-                plt.pause(0.1)
+                plt.pause(0.01)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
