@@ -17,7 +17,7 @@ camera_matrix = np.array([22950.819,0,540,0,22950.819,960,0,0,1], dtype=np.float
 distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
 # distort_coefficient = np.array([-0.33022, 0.31466, -0.00036, -0.00093, -0.34203]).reshape(3,3)
 
-marker_length = 0.03
+marker_length = 0.185
 
 video = './test_images/undistorted_video.mp4'
 video = './test_images/test_video.mp4'
@@ -67,8 +67,8 @@ if cap.isOpened():
 
             # if ids[i,0] < 11:
             if ids[i,0] == 10:
-                # rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
-                rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
+                rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
+                # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
                 pose_matrix[:3, :3] = rotation_matrix
                 pose_matrix[:3, 3] = tvec.reshape(1,3)
