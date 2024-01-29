@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-camera_matrix = np.array([1,0,640,0,1,360,0,0,1], dtype=np.float32).reshape(3,3)
-distort_coefficient = np.array([0,0,0,0], dtype=np.float32)
+camera_matrix = np.array([22950.819,0,540,0,22950.819,960,0,0,1], dtype=np.float32).reshape(3,3)
+distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
 
 marker_length = 0.03
 
@@ -35,8 +35,9 @@ if cap.isOpened():
 
         if ids is not None:
             for i in range(0, len(ids)):
-                _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
-                img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, 0.03)
+                # _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
+                rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
+                img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)
