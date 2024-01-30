@@ -8,14 +8,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 from marker_coordinate import marker_coordinate
+from camera_params import default_camera_mat, iphone13_camera_mat, iphoneX_camera_mat, sekonix_camera_mat, default_distort_coefficient, sekonix_distort_coefficient
 
-# camera_matrix = np.array([26273.684,0,540,0,26273.684,960,0,0,1], dtype=np.float32).reshape(3,3)
-camera_matrix = np.array([22950.819,0,540,0,22950.819,960,0,0,1], dtype=np.float32).reshape(3,3)
-# camera_matrix = np.array([1,0,0,0,1,0,0,0,1], dtype=np.float32).reshape(3,3)
-# camera_matrix = np.array([1861.97717, 0, 982.67999, 0, 1861.23669, 541.22597,0,0,1]).reshape(3,3)
-# camera_matrix = np.array([18610, 0, 960, 0, 1861, 5400,0,0,1]).reshape(3,3)
-distort_coefficient = np.array([0,0,0,0,0], dtype=np.float32)
-# distort_coefficient = np.array([-0.33022, 0.31466, -0.00036, -0.00093, -0.34203]).reshape(3,3)
+camera_matrix = default_camera_mat
+distort_coefficient = default_distort_coefficient
 
 marker_length = 0.185
 
