@@ -10,3 +10,9 @@ marker_coordinate ={
     9 : (1.18, 0.94),
     10 : (1.24, 0.94)
 }
+
+def homogeneous_matrix_maker(roll, pitch, yaw, x, y, z): 
+
+    
+    
+    return roll
