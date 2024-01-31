@@ -39,8 +39,8 @@ x_data = []
 y_data = []
 z_data = []
 
-# cap = cv2.VideoCapture(video)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(video)
+# cap = cv2.VideoCapture(0)
 if cap.isOpened():
 
     while True:
@@ -64,11 +64,13 @@ if cap.isOpened():
                     
                     pose_matrix = homogeneous_matrix_maker(rvec[0], rvec[1], rvec[2], tvec[0], tvec[1], tvec[2])
                     camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
+                    # camera_pose_h = np.linalg.inv(pose_matrix) @ get_homogeneous_matrix(ids[i,0])
+
 
                     # for average camera pose
-                    # x_data.append(camera_pose_h[0][3])
-                    # y_data.append(camera_pose_h[1][3])
-                    # z_data.append(abs(camera_pose_h[2][3]))
+                    # x_data.append(np.linalg.inv(pose_matrix)[0][3])
+                    # y_data.append(np.linalg.inv(pose_matrix)[1][3])
+                    # z_data.append(abs(np.linalg.inv(pose_matrix)[2][3]))
                     x_data.append(pose_matrix[0][3])
                     y_data.append(pose_matrix[1][3])
                     z_data.append(pose_matrix[2][3])
@@ -76,12 +78,12 @@ if cap.isOpened():
                     ax.clear()
                     ax.scatter(x_data, y_data, z_data, marker='o')
 
-            ax.set_xlabel('X [m]')
-            ax.set_ylabel('Y [m]')
-            ax.set_zlabel('Z [m]')
+                    ax.set_xlabel('X [m]')
+                    ax.set_ylabel('Y [m]')
+                    ax.set_zlabel('Z [m]')
 
-            plt.show()
-            plt.pause(0.01)
+                    plt.show()
+                    plt.pause(0.01)
 
         cv2.imshow(video, img)
         cv2.waitKey(27)

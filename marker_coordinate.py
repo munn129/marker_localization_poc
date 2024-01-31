@@ -26,6 +26,7 @@ def homogeneous_matrix_maker(roll, pitch, yaw, x, y, z):
     roll_mat = np.array([1,0,0,0,math.cos(roll), -math.cos(roll), 0, math.sin(roll), math.cos(roll)]).reshape(3,3)
     homogeneous_matrix[:3, :3] = yaw_mat @ pitch_mat @ roll_mat
     homogeneous_matrix[:3, 3] = np.array([x,y,z]).reshape(1,3)
+    homogeneous_matrix[3,3] = 1
 
     return homogeneous_matrix
 

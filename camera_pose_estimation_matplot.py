@@ -39,8 +39,8 @@ x_data = []
 y_data = []
 z_data = []
 
-# cap = cv2.VideoCapture(video)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(video)
+# cap = cv2.VideoCapture(0)
 if cap.isOpened():
 
     while True:
@@ -60,8 +60,8 @@ if cap.isOpened():
                 # rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
-            # if ids[i,0] < 11:
-            if ids[i,0] == 10:
+            if ids[i,0] < 11:
+            # if ids[i,0] == 10:
                 rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
@@ -81,13 +81,12 @@ if cap.isOpened():
                 # for average camera pose
                 # camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
 
-                
                     
             if(camera_pose_post[-1] != 0):
                 # average camera pose estimated from each marker
                 # absolute camera pose |value|
                 camera_pose_post = [i for i in camera_pose_post]
-                # camera_pose_post[-1] = 1
+                camera_pose_post[-1] = 1
                 # print(camera_pose_post)
 
                 # x_data.append(abs(camera_pose_post[0]))
