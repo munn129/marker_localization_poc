@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from marker_coordinate import marker_coordinate, get_homogeneous_matrix
+from marker_coordinate import get_homogeneous_matrix
 from camera_params import default_camera_mat, iphone13_camera_mat, iphoneX_camera_mat, sekonix_camera_mat, default_distort_coefficient, sekonix_distort_coefficient
 
 camera_matrix = iphoneX_camera_mat
