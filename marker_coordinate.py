@@ -11,10 +11,11 @@ marker_coordinate ={
     7 : (0,0,0,1.06, 0.94,1),
     8 : (0,0,0,1.12, 0.94,1),
     9 : (0,0,0,1.18, 0.94,1),
-    10 : (0,0,0,1.24, 0.94,1)
+    # 10 : (0,90,0,1.24, 0.94,1)
+    10 : (0, 0, 0, 0,0,0,0)
 }
 
-def _homogeneous_matrix_maker(roll, pitch, yaw, x, y, z): 
+def homogeneous_matrix_maker(roll, pitch, yaw, x, y, z): 
     '''
     roll, pitch, yaw : rotation vector , world coordinate(UTM) <-> Marker
     x, y, z : translation vector
@@ -37,4 +38,4 @@ def get_homogeneous_matrix(id):
     y = marker_coordinate[id][4]
     z = marker_coordinate[id][5]
     
-    return _homogeneous_matrix_maker(roll, pitch, yaw, x, y, z)
+    return homogeneous_matrix_maker(roll, pitch, yaw, x, y, z)

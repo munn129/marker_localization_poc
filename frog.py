@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-from marker_coordinate import get_homogeneous_matrix
+from marker_coordinate import get_homogeneous_matrix, homogeneous_matrix_maker
 from camera_params import default_camera_mat, iphone13_camera_mat, iphoneX_camera_mat, sekonix_camera_mat, default_distort_coefficient, sekonix_distort_coefficient
 
 camera_matrix = iphoneX_camera_mat
@@ -56,17 +56,14 @@ if cap.isOpened():
             camera_pose_post = [0,0,0,0]
             for i in range(0, len(ids)):
                 _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
-                # retval, rvec, tvec, inliers = cv2.solvePnPRansac(object_points, corners[i], camera_matrix, distort_coefficient)
                 # rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
             # if ids[i,0] < 11:
             if ids[i,0] == 10:
-                rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
+                # rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
-                pose_matrix = np.eye(4)
-                pose_matrix[:3, :3] = rotation_matrix
-                pose_matrix[:3, 3] = tvec.reshape(1,3)
+                pose_matrix = homogeneous_matrix_maker(rvec[0], rvec[1], rvec[2], tvec[0], tvec[1], tvec[2])
 
                 # marker_x = marker_coordinate[ids[i,0]][0]
                 # marker_y = marker_coordinate[ids[i,0]][1]
@@ -79,37 +76,22 @@ if cap.isOpened():
                 camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
 
                 # for average camera pose
-                # camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
+                x_data.append(camera_pose_h[0][3])
+                y_data.append(camera_pose_h[1][3])
+                z_data.append(abs(camera_pose_h[2][3]))
 
-                
-                    
-            # if(camera_pose_post[-1] != 0):
-            #     # average camera pose estimated from each marker
-            #     # absolute camera pose |value|
-            #     camera_pose_post = [i for i in camera_pose_post]
-            #     # camera_pose_post[-1] = 1
-            #     # print(camera_pose_post)
+                ax.clear()
+                ax.scatter(x_data, y_data, z_data, marker='o')
 
-            #     # x_data.append(abs(camera_pose_post[0]))
-            #     # y_data.append(abs(camera_pose_post[1]))
-            #     # z_data.append(abs(camera_pose_post[2]))
-            #     x_data.append(camera_pose_post[0])
-            #     y_data.append(camera_pose_post[1])
-            #     z_data.append(camera_pose_post[2])
-            #     ax.clear()
-            #     ax.scatter(x_data, y_data, z_data, marker='o')
-            #     # ax.scatter(x_data, y_data,  marker='o')
-            #     # ax.plot(x_data, y_data, z_data)
+            ax.set_xlabel('X [m]')
+            ax.set_ylabel('Y [m]')
+            ax.set_zlabel('Z [m]')
 
-            #     ax.set_xlabel('X [m]')
-            #     ax.set_ylabel('Y [m]')
-            #     ax.set_zlabel('Z [m]')
-
-            #     plt.show()
-            #     plt.pause(0.01)
+            plt.show()
+            plt.pause(0.01)
 
         cv2.imshow(video, img)
-        cv2.waitKey(33)
+        cv2.waitKey(27)
 
 else:
     print("cannot open video file")
