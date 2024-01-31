@@ -9,6 +9,19 @@ import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation
 from marker_coordinate import marker_coordinate
 
+REFERENCE_POINT = [
+    [0,0,0],
+    [0,0,1],
+    [0,0.5,1],
+    [0,0,2],
+    [0,1,2],
+    [0,0,3],
+    [0,1,3],
+    [0,2,3],
+    [0,0,4],
+    [0,0,5],
+    [0,0,6],
+]
 
 def make_dir(dir):
     if(not os.path.exists(dir)):
@@ -65,6 +78,7 @@ class MAKER_ESTIMATOR:
         self.count_time = 0
         self.one_marker = None
         self.save_marker = False
+        self.chcker = 0
 
     def plot_img(self, camera_pose_post, save_name):
         # initialize graph
@@ -74,7 +88,8 @@ class MAKER_ESTIMATOR:
             camera_pose_post[-1] = 1
             # print(camera_pose_post)
 
-            self.x_data.append(camera_pose_post[0])
+            self.x_data.append(0)
+            # self.x_data.append(camera_pose_post[0])
             self.y_data.append(camera_pose_post[1])
             self.z_data.append(camera_pose_post[2])
             # self.z_data.append(abs(camera_pose_post[2]))
@@ -84,14 +99,17 @@ class MAKER_ESTIMATOR:
             # y_data.append(0)
             # z_data.append(camera_pose_post[2])
             self.ax.clear()
-            
+        
             self.ax.scatter(self.x_data, self.y_data, self.z_data,c = self.count_list, marker='o', cmap='viridis')
+            self.ax.scatter(np.array(REFERENCE_POINT)[:, 0], np.array(REFERENCE_POINT)[:, 1], np.array(REFERENCE_POINT)[:, 2], c='r', marker='o')
             self.count += 1
             self.ax.set_xlabel('X (m)')
             self.ax.set_ylabel('Y (m)')
             self.ax.set_zlabel('Z (m)')
-            plt.savefig(f"{save_name}.svg",dpi=300)
             # plt.show()
+            
+            plt.savefig(f"{save_name}.svg",dpi=300)
+
             # plt.pause(0.01)
 
     def draw_img(self, img, marker_idx, corner, s_txt, camera_pose_post, save_name):
@@ -99,14 +117,14 @@ class MAKER_ESTIMATOR:
         _, rvec, tvec = cv2.solvePnP(self.object_points, corner, self.camera_mat, self.distort_coefficient)
         img = cv2.drawFrameAxes(img, self.camera_mat, self.distort_coefficient, rvec, tvec, 0.03)
         # 计算旋转矩阵
-        rotation_matrix, _ = cv2.Rodrigues(rvec)
+        rotation_matrix_first, _ = cv2.Rodrigues(rvec)
         # 计算旋转矩阵的欧拉角
-        euler_angles = cv2.RQDecomp3x3(rotation_matrix)[0]
+        euler_angles = cv2.RQDecomp3x3(rotation_matrix_first)[0]
         # 总旋转角度为欧拉角的模长
         total_rotation_angle = np.linalg.norm(euler_angles)
 
         img = cv2.putText(img, s_txt, (20,150), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,215,0), 5)
-        img = cv2.putText(img, f'Angle is {round(total_rotation_angle,2)}', (20,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,215,0), 5)
+        img = cv2.putText(img, f'Angle is {[round(x,2) for x in np.squeeze(rvec)]}', (20,300), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,215,0), 5)
         img = cv2.putText(img, f'Translation is {[round(x,2) for x in np.squeeze(tvec)]}', (20,450), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,215,0), 5)
         img = cv2.putText(img, f'Rotation is {[round(x,2) for x in np.squeeze(euler_angles)]}', (20,600), cv2.FONT_HERSHEY_SIMPLEX, 5, (255,215,0), 5)
         if marker_idx < 11:
@@ -117,13 +135,13 @@ class MAKER_ESTIMATOR:
 
             marker_x = marker_coordinate[marker_idx][0]
             marker_y = marker_coordinate[marker_idx][1]
-            # marker_z = marker_coordinate[marker_idx][2]
-            marker_z = 0
-
+            marker_z = marker_coordinate[marker_idx][2]
+            # marker_z = 0
 
             marker_absolute_position = np.array([marker_x, marker_y, marker_z, 1])
-            camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
 
+            print(self.chcker)
+            camera_pose = np.linalg.inv(np.linalg.inv(pose_matrix)) @ marker_absolute_position
             camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose)]
         self.plot_img(camera_pose_post, save_name)
 
@@ -131,7 +149,9 @@ class MAKER_ESTIMATOR:
         plt.ion()
         fig = plt.figure()
         self.ax = fig.add_subplot(111, projection='3d')
+        self.length_d = len(img_list)
         for img_name in img_list:
+            self.chcker +=1
             fname = img_name.split(os.sep)[-1][:-4]
             save_name = f"{save_dir}{fname}"
             self.count_time +=1
@@ -163,9 +183,20 @@ class MAKER_ESTIMATOR:
             print("cannot open video file")
 
         # cv2.destroyAllWindows()
+    def final_plot(self,):
+            self.ax.clear()
+            self.ax.scatter(self.x_data, self.y_data, self.z_data,c = self.count_list, marker='o', cmap='viridis')
+            self.ax.scatter(np.array(REFERENCE_POINT)[:, 0], np.array(REFERENCE_POINT)[:, 1], np.array(REFERENCE_POINT)[:, 2], c='r', marker='o')
+            self.count += 1
+            self.ax.set_xlabel('X (m)')
+            self.ax.set_ylabel('Y (m)')
+            self.ax.set_zlabel('Z (m)')
+            plt.show()
+            plt.pause(600)
 
     def main(self, img_list, save_dir):
         self.estimation_video(img_list, save_dir)
+        self.final_plot()
 
 if __name__ == '__main__':
     input_list = ['web_cam', 'video'] ## useless
