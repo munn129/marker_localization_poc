@@ -83,30 +83,30 @@ if cap.isOpened():
 
                 
                     
-            # if(camera_pose_post[-1] != 0):
-            #     # average camera pose estimated from each marker
-            #     # absolute camera pose |value|
-            #     camera_pose_post = [i for i in camera_pose_post]
-            #     # camera_pose_post[-1] = 1
-            #     # print(camera_pose_post)
+            if(camera_pose_post[-1] != 0):
+                # average camera pose estimated from each marker
+                # absolute camera pose |value|
+                camera_pose_post = [i for i in camera_pose_post]
+                # camera_pose_post[-1] = 1
+                # print(camera_pose_post)
 
-            #     # x_data.append(abs(camera_pose_post[0]))
-            #     # y_data.append(abs(camera_pose_post[1]))
-            #     # z_data.append(abs(camera_pose_post[2]))
-            #     x_data.append(camera_pose_post[0])
-            #     y_data.append(camera_pose_post[1])
-            #     z_data.append(camera_pose_post[2])
-            #     ax.clear()
-            #     ax.scatter(x_data, y_data, z_data, marker='o')
-            #     # ax.scatter(x_data, y_data,  marker='o')
-            #     # ax.plot(x_data, y_data, z_data)
+                # x_data.append(abs(camera_pose_post[0]))
+                # y_data.append(abs(camera_pose_post[1]))
+                # z_data.append(abs(camera_pose_post[2]))
+                x_data.append(camera_pose_post[0])
+                y_data.append(camera_pose_post[1])
+                z_data.append(camera_pose_post[2])
+                ax.clear()
+                ax.scatter(x_data, y_data, z_data, marker='o')
+                # ax.scatter(x_data, y_data,  marker='o')
+                # ax.plot(x_data, y_data, z_data)
 
-            #     ax.set_xlabel('X [m]')
-            #     ax.set_ylabel('Y [m]')
-            #     ax.set_zlabel('Z [m]')
+                ax.set_xlabel('X [m]')
+                ax.set_ylabel('Y [m]')
+                ax.set_zlabel('Z [m]')
 
-            #     plt.show()
-            #     plt.pause(0.01)
+                plt.show()
+                plt.pause(0.01)
 
         cv2.imshow(video, img)
         cv2.waitKey(33)

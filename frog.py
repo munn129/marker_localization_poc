@@ -59,29 +59,22 @@ if cap.isOpened():
                 # rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
-            # if ids[i,0] < 11:
-            if ids[i,0] == 10:
-                # rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
-                # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
-                pose_matrix = homogeneous_matrix_maker(rvec[0], rvec[1], rvec[2], tvec[0], tvec[1], tvec[2])
+                if ids[i,0] < 11:
+                # if ids[i,0] == 10:
+                    
+                    pose_matrix = homogeneous_matrix_maker(rvec[0], rvec[1], rvec[2], tvec[0], tvec[1], tvec[2])
+                    camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
 
-                # marker_x = marker_coordinate[ids[i,0]][0]
-                # marker_y = marker_coordinate[ids[i,0]][1]
-                # marker_z = marker_coordinate[ids[i,0]][2]
-                # marker_z = 1
+                    # for average camera pose
+                    # x_data.append(camera_pose_h[0][3])
+                    # y_data.append(camera_pose_h[1][3])
+                    # z_data.append(abs(camera_pose_h[2][3]))
+                    x_data.append(pose_matrix[0][3])
+                    y_data.append(pose_matrix[1][3])
+                    z_data.append(pose_matrix[2][3])
 
-                # marker_absolute_position = np.array([marker_x, marker_y, marker_z, 1])
-                # camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
-
-                camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
-
-                # for average camera pose
-                x_data.append(camera_pose_h[0][3])
-                y_data.append(camera_pose_h[1][3])
-                z_data.append(abs(camera_pose_h[2][3]))
-
-                ax.clear()
-                ax.scatter(x_data, y_data, z_data, marker='o')
+                    ax.clear()
+                    ax.scatter(x_data, y_data, z_data, marker='o')
 
             ax.set_xlabel('X [m]')
             ax.set_ylabel('Y [m]')
