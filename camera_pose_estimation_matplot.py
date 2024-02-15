@@ -40,7 +40,7 @@ y_data = []
 z_data = []
 
 cap = cv2.VideoCapture(video)
-# cap = cv2.VideoCapture(0)ß
+# cap = cv2.VideoCapture(0)
 if cap.isOpened():
 
     while True:
@@ -60,8 +60,8 @@ if cap.isOpened():
                 rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
-            # if ids[i,0] < 11:
-            if ids[i,0] == 3:
+            if ids[i,0] < 11:
+            # if ids[i,0] == 3:
                 rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
@@ -99,9 +99,9 @@ if cap.isOpened():
                 # ax.scatter(x_data, y_data,  marker='o')
                 # ax.plot(x_data, y_data, z_data)
 
-                ax.set_xlabel('X [m]')
-                ax.set_ylabel('Y [m]')
-                ax.set_zlabel('Z [m]')
+                ax.set_xlabel('X [mm]')
+                ax.set_ylabel('Y [mm]')
+                ax.set_zlabel('Z [mm]')
 
                 plt.show()
                 plt.pause(0.01)
