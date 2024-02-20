@@ -60,8 +60,8 @@ if cap.isOpened():
                 # rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
-            if ids[i,0] < 11:
-            # if ids[i,0] == 10:
+            # if ids[i,0] < 11:
+            if ids[i,0] == 3:
                 rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
@@ -77,11 +77,14 @@ if cap.isOpened():
                 # camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
 
                 # camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
-                camera_pose_h = np.linalg.inv(pose_matrix)
+                # camera_pose_h = np.linalg.inv(pose_matrix)
 
                 # for average camera pose
-                camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
+                # camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
 
+                '''
+                pose * pose가 아니라, 계속 pose를 더해야 함
+                '''
                     
             if(camera_pose_post[-1] != 0):
                 # average camera pose estimated from each marker
