@@ -108,8 +108,8 @@ if cap.isOpened():
                 plt.pause(0.01)
 
         cv2.imshow(video, img)
-        cv2.waitKey(33)
-
+        if cv2.waitKey(1) == ord('q'): break 
+        
 else:
     print("cannot open video file")
 
