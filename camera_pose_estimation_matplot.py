@@ -55,13 +55,17 @@ if cap.isOpened():
         if ids is not None:
             camera_pose_post = [0,0,0,0]
             for i in range(0, len(ids)):
-                # _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
+                _, rvec, tvec = cv2.solvePnP(object_points, corners[i], camera_matrix, distort_coefficient)
                 # retval, rvec, tvec, inliers = cv2.solvePnPRansac(object_points, corners[i], camera_matrix, distort_coefficient)
-                rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
+                # rvec, tvec, object_points = cv2.aruco.estimatePoseSingleMarkers(corners[i], marker_length, camera_matrix, distort_coefficient)
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
             if ids[i,0] < 11:
+<<<<<<< HEAD
             # if ids[i,0] == 3:
+=======
+            # if ids[i,0] == 10:
+>>>>>>> 9a65c6e0f285dc858efcec85a1aa9ff09723b915
                 rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
@@ -79,7 +83,8 @@ if cap.isOpened():
                 camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
 
                 # for average camera pose
-                camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
+                # camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
+
                     
             if(camera_pose_post[-1] != 0):
                 # average camera pose estimated from each marker
