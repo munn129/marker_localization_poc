@@ -61,11 +61,7 @@ if cap.isOpened():
                 img = cv2.drawFrameAxes(img, camera_matrix, distort_coefficient, rvec, tvec, marker_length)
 
             if ids[i,0] < 11:
-<<<<<<< HEAD
-            # if ids[i,0] == 3:
-=======
             # if ids[i,0] == 10:
->>>>>>> 9a65c6e0f285dc858efcec85a1aa9ff09723b915
                 rotation_matrix = Rotation.from_euler('xyz', rvec.reshape(1,3), degrees=True).as_matrix()
                 # rotation_matrix = Rotation.from_rotvec(rvec.reshape(1,3), degrees=True).as_matrix()
                 pose_matrix = np.eye(4)
