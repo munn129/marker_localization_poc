@@ -76,10 +76,11 @@ if cap.isOpened():
                 # marker_absolute_position = np.array([marker_x, marker_y, marker_z, 1])
                 # camera_pose = np.linalg.inv(pose_matrix) @ marker_absolute_position
 
-                camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
+                # camera_pose_h = get_homogeneous_matrix(ids[i,0]) @ np.linalg.inv(pose_matrix)
+                camera_pose_h = np.linalg.inv(pose_matrix)
 
                 # for average camera pose
-                # camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
+                camera_pose_post = [ x + y for x, y in zip(camera_pose_post, camera_pose_h[:3, 3])]
 
                     
             if(camera_pose_post[-1] != 0):
